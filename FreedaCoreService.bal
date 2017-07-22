@@ -1,38 +1,44 @@
 import ballerina.net.http;
 import ballerina.lang.messages;
+import ballerina.data.sql;
 
-@http:config {basePath:"/freedacore"}
+@http:configuration {basePath:"/freedacore"}
 service<http> HelloService {
 
     @http:GET {}
     @http:Path {value:"/login"}
-    resource sayHello (message m) {
+    resource login (message m) {
         message response = {};
         messages:setStringPayload(response, "Login..");
         reply response;
     }
 
     @http:GET {}
-    @http:Path {value:"/allUsers"}
-    resource sayHello (message m) {
+    @http:Path {value:"/user"}
+    resource userList (message m) {
+        map props = {"jdbcUrl":"jdbc:mysql://localhost:3306/freeda", "username":"root", "password":"user@123"};
+        sql:ClientConnector freedaDB = create sql:ClientConnector(props);
+        sql:Parameter[] params = [];
+        datatable dt = sql:ClientConnector.select(freedaDB, "SELECT * from User", params);
+        var jsonRes, err = <json>dt;
         message response = {};
-        messages:setStringPayload(response, "allUsers..");
+        messages:setJsonPayload(response, jsonRes);
         reply response;
     }
 
-    // Checkout the REST naming convention of the URL here
+
     @http:GET {}
     @http:Path {value:"/checkAvailability"}
-    resource sayHello (message m) {
+    resource checkAvailability (message m) {
         message response = {};
         messages:setStringPayload(response, "checkAvailability..");
         reply response;
     }
 
-    // Checkout the REST naming convention of the URL here
+
     @http:GET {}
     @http:Path {value:"/createMeeting"}
-    resource sayHello (message m) {
+    resource createMeeting (message m) {
         message response = {};
         messages:setStringPayload(response, "createMeeting..");
         reply response;
