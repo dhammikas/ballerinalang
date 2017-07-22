@@ -1,27 +1,32 @@
 package com.freeda.manager.impl;
 import ballerina.lang.system;
+import ballerina.lang.messages;
 import connectors.googlecalendar;
-
-string userId = "freedatest1@gmail.com";
-string accessToken = "ya29.GluQBJddhsiYLwtUQuXoz7U5gKGKcHP-6m0xkncfyE9_RbWMs5Zk5FI3KjCONZhoWD_jTld6vk4eO0JSeeK8sI4W3AUHESTnWT6w4TEs5QgTiXjJJoxj2GrVMVh2";
-string refreshToken = "1/sNJAaC3Dt90Qxz9vq7btrE3UtAVYba55E2lk6vpEEFY";
-string clientId = "294920908486-2v42sias9f74m63chmvaolve8mn043rs.apps.googleusercontent.com";
-string clientSecret = "tP4jPU5WkTqKqnNNCYAC1F9j";
+import ballerina.lang.jsons;
 
 function main (string[] args) {
     //string[] recipients  = ["ballerinahack.john.doe@gmail.com ","ballerinahack.mark.hughes@gmail.com ",
     //                        "ballerinahack.adam.sandler@gmail.com "];
     string recipient1  = "freedatest1@gmail.com";
-    GoogleCalToken token1 = {userId : "freedatest1@gmail.com",
-                                accessToken : "ya29.GluQBJddhsiYLwtUQuXoz7U5gKGKcHP-6m0xkncfyE9_RbWMs5Zk5FI3KjCONZhoWD_jTld6vk4eO0JSeeK8sI4W3AUHESTnWT6w4TEs5QgTiXjJJoxj2GrVMVh2",
-                                refreshToken : "1/sNJAaC3Dt90Qxz9vq7btrE3UtAVYba55E2lk6vpEEFY",
+    GoogleCalToken token1 = {
+                                userId : "freedatest1@gmail.com",
+                                accessToken : "ya29.GluQBO8u4j9Mpz8PS96BNBZId595lVUhx26QiDq0joRGjl_eqdKS9jQ_ybqJaTS4LxB3vvEPN5J4OAxstd3PDCzJyGljvIw6WQz_91A98vQ7ouwW_QoijHlmsrCU",
+                                refreshToken : "1/2EZoWKbfQB-YVMH2-KMAmDwIqIR5rl0W51yJOLCSERE",
                                 clientId : "294920908486-2v42sias9f74m63chmvaolve8mn043rs.apps.googleusercontent.com",
-                                clientSecret : "tP4jPU5WkTqKqnNNCYAC1F9j"};
+                                clientSecret : "tP4jPU5WkTqKqnNNCYAC1F9j"
+
+                            };
     any[][] recipientsInfo = [[recipient1, token1]];
 
 
-    Booking mockBooking = {fromTime:"2017-06-26T09:46:22.444-0500", toTime:"tT", recipientsInfo:recipientsInfo};
+    Booking mockBooking = {fromTime:"2017-07-22T12:50:40+00:00", toTime:"2017-07-22T20:50:40+00:00", recipientsInfo:recipientsInfo};
     system:println(checkAvailability(mockBooking));
+    ////json statusmsg = {status:"false", flag:"NOT_AVAILABLE", meta:{options:[
+    //                                                                      ["2017-07-22T12:50:40+00:00", "2017-07-22T12:50:40+00:00"],
+    //                                                                      ["2017-07-22T12:50:40+00:00", "2017-07-22T12:50:40+00:00"],
+    //                                                                      ["2017-07-22T12:50:40+00:00", "2017-07-22T12:50:40+00:00"]
+    //                                                                      ]}};
+    //system:println( jsons:toString(statusmsg));
 }
 
 struct Booking{
@@ -49,17 +54,50 @@ function checkAvailability(Booking bookingInfo)(string){
             recipientInfo = bookingInfo.recipientsInfo[0];
             // Call Google Calendar and check availability of 'recipient'
             //system:println(recipientInfo[1]);
+            var email, err = (string)recipientInfo[0];
             var token, err = (GoogleCalToken)recipientInfo[1];
             GoogleCalToken googleCalToken = (GoogleCalToken)token;
-            system:println(googleCalToken);
+            //creating the Google Cal
+            //googlecalendar:ClientConnector calendar = create googlecalendar:ClientConnector(googleCalToken.userId, googleCalToken.accessToken, googleCalToken.refreshToken, googleCalToken.clientId, googleCalToken.clientSecret);
             googlecalendar:ClientConnector calendar = create googlecalendar:ClientConnector(googleCalToken.userId, googleCalToken.accessToken, googleCalToken.refreshToken, googleCalToken.clientId, googleCalToken.clientSecret);
-            //system:println(recipientInfo);
+
+            //create an Calander
+            //message calendarResponse = googlecalendar:ClientConnector.createQuickEvent(calendar, googleCalToken.userId, "event text");
+
+
+            //message x = googlecalendar:ClientConnector.getAllEvents(calendar, "freedatest1@gmail.com");
+
+            //message response = googlecalendar:ClientConnector.checkFreebusy(calendar, "2017-07-22T12:50:40+00:00", "2017-07-22T20:50:40+00:00", "freedatest1@gmail.com");
+
+            message calendarResponse = googlecalendar:ClientConnector.checkFreebusy(calendar, bookingInfo.fromTime, bookingInfo.toTime, email);
+            //var x, err = (json)calendarResponse;
+
+            //system:println(x);
+            json y = messages:getJsonPayload(calendarResponse);
+            json xx = y.calendars[email];
+            var zz = xx["busy"];
+            if(zz != null){
+                system:println("y");
+            }
+            //system:println(xx);
+
+            boolean status = true;
+            if(!status){
+                json statusmsg = {status:"false", flag:"NOT_AVAILABLE", meta:{options:[
+                                                                                      ["2017-07-22T12:50:40+00:00", "2017-07-22T12:50:40+00:00"],
+                                                                                      ["2017-07-22T12:50:40+00:00", "2017-07-22T12:50:40+00:00"],
+                                                                                      ["2017-07-22T12:50:40+00:00", "2017-07-22T12:50:40+00:00"]
+                                                                                      ]}};
+            }
 
             //message calendarResponse = googlecalendar:ClientConnector.checkFreebusy(calendar);
 
 
             recipientIndex = recipientIndex + 1;
         }
+        json statusmsg = {status:"true", flag:"ALL_AVAILABLE"};
+        return jsons:toString(statusmsg);
+
     }
     else{
         //Return an error
