@@ -23,6 +23,10 @@ service<http> HelloService {
         var jsonRes, err = <json>dt;
         message response = {};
         messages:setJsonPayload(response, jsonRes);
+
+        messages:addHeader(response, "Access-Control-Allow-Origin", "*");
+        messages:addHeader(response, "Access-Control-Allow-Methods", "GET, POST, OPTIONSs");
+
         reply response;
     }
 
