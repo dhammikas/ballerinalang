@@ -3,7 +3,6 @@ package connectors.googlecalendar;
 import ballerina.lang.messages;
 import org.wso2.ballerina.connectors.oauth2;
 import ballerina.doc;
-import ballerina.lang.strings;
 import ballerina.net.uri;
 
 @doc:Description {value:"Calendar client connector"}
