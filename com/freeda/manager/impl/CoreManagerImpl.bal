@@ -63,21 +63,20 @@ function checkAvailability(Booking bookingInfo)(string){
 
             //create an Calander
             //message calendarResponse = googlecalendar:ClientConnector.createQuickEvent(calendar, googleCalToken.userId, "event text");
-
-
             //message x = googlecalendar:ClientConnector.getAllEvents(calendar, "freedatest1@gmail.com");
-
             //message response = googlecalendar:ClientConnector.checkFreebusy(calendar, "2017-07-22T12:50:40+00:00", "2017-07-22T20:50:40+00:00", "freedatest1@gmail.com");
 
             message calendarResponse = googlecalendar:ClientConnector.checkFreebusy(calendar, bookingInfo.fromTime, bookingInfo.toTime, email);
-            //var x, err = (json)calendarResponse;
 
-            //system:println(x);
             json msgJson = messages:getJsonPayload(calendarResponse);
             json emailJson = msgJson.calendars[email];
             var busyStatusJson = emailJson["busy"];
             if(busyStatusJson != null){
-                system:println("The one with this email is busy during this time, at least " + email);
+                system:println("The one with this email is busy during this time, at least : " + email);
+                system:println("Lets start finding 3 available time slots for the given Recipients...");
+
+
+
                 json statusmsg = {status:"false", flag:"NOT_AVAILABLE", meta:{options:[
                                                                                       ["2017-07-22T12:50:40+00:00", "2017-07-22T12:50:40+00:00"],
                                                                                       ["2017-07-22T12:50:40+00:00", "2017-07-22T12:50:40+00:00"],
