@@ -1,38 +1,38 @@
 import ballerina.net.http;
 import ballerina.lang.messages;
 
-@http:config {basePath:"/freedacore"}
+@http:configuration {basePath:"/freedacore"}
 service<http> HelloService {
 
     @http:GET {}
     @http:Path {value:"/login"}
-    resource sayHello (message m) {
+    resource login (message m) {
         message response = {};
         messages:setStringPayload(response, "Login..");
         reply response;
     }
 
     @http:GET {}
-    @http:Path {value:"/allUsers"}
-    resource sayHello (message m) {
+    @http:Path {value:"/user"}
+    resource userList (message m) {
         message response = {};
         messages:setStringPayload(response, "allUsers..");
         reply response;
     }
 
-    // Checkout the REST naming convention of the URL here
+
     @http:GET {}
     @http:Path {value:"/checkAvailability"}
-    resource sayHello (message m) {
+    resource checkAvailability (message m) {
         message response = {};
         messages:setStringPayload(response, "checkAvailability..");
         reply response;
     }
 
-    // Checkout the REST naming convention of the URL here
+
     @http:GET {}
     @http:Path {value:"/createMeeting"}
-    resource sayHello (message m) {
+    resource createMeeting (message m) {
         message response = {};
         messages:setStringPayload(response, "createMeeting..");
         reply response;
