@@ -1,8 +1,6 @@
 import ballerina.net.http;
 import ballerina.lang.messages;
 import ballerina.data.sql;
-import ballerina.lang.system;
-import com.freeda.manager.impl;
 
 @http:configuration {basePath:"/freedacore"}
 service<http> HelloService {
@@ -26,7 +24,8 @@ service<http> HelloService {
         message response = {};
         messages:setJsonPayload(response, jsonRes);
 
-        messages:addHeader(response, "Access-Control-Allow-Orogin", "*");
+        messages:addHeader(response, "Access-Control-Allow-Origin", "*");
+        messages:addHeader(response, "Access-Control-Allow-Methods", "GET, POST, OPTIONSs");
 
         reply response;
     }
