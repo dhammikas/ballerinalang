@@ -73,25 +73,18 @@ function checkAvailability(Booking bookingInfo)(string){
             //var x, err = (json)calendarResponse;
 
             //system:println(x);
-            json y = messages:getJsonPayload(calendarResponse);
-            json xx = y.calendars[email];
-            var zz = xx["busy"];
-            if(zz != null){
-                system:println("y");
-            }
-            //system:println(xx);
-
-            boolean status = true;
-            if(!status){
+            json msgJson = messages:getJsonPayload(calendarResponse);
+            json emailJson = msgJson.calendars[email];
+            var busyStatusJson = emailJson["busy"];
+            if(busyStatusJson != null){
+                system:println("The one with this email is busy during this time, at least " + email);
                 json statusmsg = {status:"false", flag:"NOT_AVAILABLE", meta:{options:[
                                                                                       ["2017-07-22T12:50:40+00:00", "2017-07-22T12:50:40+00:00"],
                                                                                       ["2017-07-22T12:50:40+00:00", "2017-07-22T12:50:40+00:00"],
                                                                                       ["2017-07-22T12:50:40+00:00", "2017-07-22T12:50:40+00:00"]
                                                                                       ]}};
+                return jsons:toString(statusmsg);
             }
-
-            //message calendarResponse = googlecalendar:ClientConnector.checkFreebusy(calendar);
-
 
             recipientIndex = recipientIndex + 1;
         }
