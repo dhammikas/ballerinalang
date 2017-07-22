@@ -1,6 +1,5 @@
 import ballerina.lang.system;
 
-// A test method, just to Test this, remove it when integrating
 function main (string[] args) {
     string[] recipients  = ["ballerinahack.john.doe@gmail.com ","ballerinahack.mark.hughes@gmail.com ",
                             "ballerinahack.adam.sandler@gmail.com "];
@@ -17,7 +16,18 @@ struct Booking{
 }
 
 function checkAvailability(Booking bookingInfo)(string){
+    //1. Check if each recipient is free during the toTime - fromTime
+    int j;
+    while (j < 5) {
+        system:println(j);
+        j = j + 1;
+        if (j == 3) {
+            break;
+        }
+    }
+
     return "Not Yet Implemented, but Here is booking info : FromTime:" + bookingInfo.fromTime;
+
 }
 
 
