@@ -3,6 +3,8 @@ package connectors.googlecalendar;
 import ballerina.lang.messages;
 import org.wso2.ballerina.connectors.oauth2;
 import ballerina.doc;
+import ballerina.lang.strings;
+import ballerina.net.uri;
 
 @doc:Description {value:"Calendar client connector"}
 @doc:Param {value:"userId: The userId of the Google account which means the email id"}
@@ -22,7 +24,7 @@ connector ClientConnector (string userId, string accessToken, string refreshToke
     action getAllEvents (ClientConnector c, string calendarId) (message response) {
         message request = {};
 
-        string getPath = "/v3/calendars/" + calendarId + "/events";
+        string getPath = "/v3/calendars/" + calendarId + "/events/";
         response = oauth2:ClientConnector.get(calendarEP, getPath, request);
 
         return;
@@ -52,17 +54,9 @@ connector ClientConnector (string userId, string accessToken, string refreshToke
 
     action createQuickEvent(ClientConnector c, string calendarId, string eventText) (message response) {
         message request = {};
-        string uriString = "";
-        string getPath = "";
 
-        if (eventText != "") {
-            uriString = uriString + "&text=" + eventText;
-        }
-
-        if (uriString != "") {
-            getPath = "/v3/calendars/" + calendarId + "/events/quickadd?" + uriString;
-        }
-
+        messages:setHeader(request, "Content-Length", "0");
+        string getPath = "/v3/calendars/" + uri:encode(calendarId) +  "/events/quickAdd?text=" + uri:encode(eventText);
         response = oauth2:ClientConnector.post(calendarEP, getPath, request);
 
         return;
